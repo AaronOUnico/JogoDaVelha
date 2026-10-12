@@ -1,7 +1,6 @@
 let jogadorAtual = 'X';
 let jogoAtivo = true;
 let estadoTabuleiro = ['', '', '', '', '', '', '', '', '',];
-
 const mensagemEL = document.getElementById('mensagem');
 // retorna NodeList, parece-se, mas não é um array
 const botoes = document.querySelectorAll('.tabuleiro button')
@@ -16,6 +15,10 @@ const condicoesVictory = [
     [2, 4, 6]
 ];
 
+document.body.classList.add('tema-cosmico');
+mensagemEL.innerText = "Vez da Corte Cósmica";
+
+
 botoes.forEach((botao, index) => {
     botao.addEventListener('click', () => aoClicar(botao, index));
 });
@@ -23,14 +26,18 @@ botoes.forEach((botao, index) => {
 function aoClicar(botao, index) {
     
     if (estadoTabuleiro[index] !== '' || !jogoAtivo) {
-        return
+        return;
     }
 
     estadoTabuleiro[index] = jogadorAtual;
     botao.innerText = jogadorAtual;
-    //? é p if/else
-    botao.classList.add(jogadorAtual === 'X' ? 'jogador-x' : 'jogador-o');
-
+    
+    
+    if (jogadorAtual === 'X') {
+        botao.classList.add('corte-cosmica')
+    } else {
+        botao.classList.add('cosmos-negro')
+    }
     botao.disabled = true;
 
     isResultado();
@@ -51,20 +58,37 @@ function isResultado() {
     }
 
     if (rodadaVencida) {
-        mensagemEL.innerText = ` Jogador ${jogadorAtual} venceu!`
-        return TerminaJogo();
+        if (jogadorAtual === 'X') {
+            mensagemEL.innerText = "A corte cósmica prospera!!";
+            mensagemEL.style.color = '#00bfff'
+        } else {
+            mensagemEL.innerText = "A Estrela Negra consumiu tudo..."
+            mensagemEL.style.color = '#a855f7'
+        }
+        TerminaJogo();
+        return;
     }
-
     let empate = !estadoTabuleiro.includes('');
     if (empate) {
-        mensagemEL.innerText = 'Deu velha!';
-        mensagemEL.style.color = '#facc15'
+        mensagemEL.innerTexc = 'Confronto adiado!';
+        mensagemEL.style.color = '#234356'
         TerminaJogo();
         return;
     }
 
-    jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
-    mensagemEL.innerText = `Vez do jogador ${jogadorAtual}`;
+    if (jogadorAtual === 'X') {
+        jogadorAtual = 'O';
+        mensagemEL.innerText = 'Vez do Cosmos Negro';
+        mensagemEL.style.color = '#681993'
+        document.body.classList.remove('tema-cosmico')
+        document.body.classList.add('tema-cosmos-negro')
+    } else {
+        jogadorAtual = 'X';
+        mensagemEL.innerText = 'Vez da Corte Cósmica';
+        mensagemEL.style.color = '#87CEEB'
+        document.body.classList.remove('tema-cosmos-negro')
+        document.body.classList.add('tema-cosmico')
+    }
 
 }   
 
